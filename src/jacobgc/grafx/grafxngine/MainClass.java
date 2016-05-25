@@ -11,8 +11,16 @@
 
 package jacobgc.grafx.grafxngine;
 
+import jacobgc.grafx.grafxngine.display.Display;
+
 /**
  * Created by JacobGC on 5/24/2016.
  */
 public class MainClass {
+    public static void main(String[] args){
+        //Setting the game fps and starting it
+        Display game = new Display();
+        game.setFPS(60.0);
+        game.start();
+    }
 }
