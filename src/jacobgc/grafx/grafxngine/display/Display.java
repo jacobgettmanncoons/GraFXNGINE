@@ -13,14 +13,16 @@ package jacobgc.grafx.grafxngine.display;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-
+import jacobgc.grafx.grafxngine.render_engine.Loader;
+import jacobgc.grafx.grafxngine.render_engine.Renderer;
+import jacobgc.grafx.grafxngine.render_engine.RawModel;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
  * Created by JacobGC on 5/24/2016.
  */
-
 public class Display implements Runnable {
 
     public static Thread thread;
@@ -30,7 +32,10 @@ public class Display implements Runnable {
     private static double fps;
     private static String title = "GraFX NGINE";
 
-    public static void setFPS(double fpsField) {
+    static Loader loader = new Loader();
+    static Renderer renderer = new Renderer();
+
+    public void setFPS(double fpsField) {
         fps = fpsField;
     }
 
@@ -56,6 +61,7 @@ public class Display implements Runnable {
         GLFW.glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
 
         GLFW.glfwMakeContextCurrent(window);
+        GL.createCapabilities();
         GLFW.glfwShowWindow(window);
     }
 
@@ -63,8 +69,23 @@ public class Display implements Runnable {
         GLFW.glfwPollEvents();
     }
 
+    public static void triangle(){
+
+    }
+
     public static void render() {
         GLFW.glfwSwapBuffers(window);
+        float[] vertices = {
+                -0.5f, 0.5f, 0f,
+                -0.5f, -0.5f, 0f,
+                0.5f, -0.5f, 0f,
+                0.5f, -0.5f, 0f,
+                0.5f, 0.5f, 0f,
+                -0.5f, 0.5f, 0f
+        };
+        RawModel model = loader.loadToVAO(vertices);
+        renderer.prepare();
+        renderer.render(model);
     }
 
     @Override
@@ -110,6 +131,7 @@ public class Display implements Runnable {
 
             if (GLFW.glfwWindowShouldClose(window) == GL11.GL_TRUE) {
                 running = false;
+                loader.cleanUP();
             }
         }
     }
